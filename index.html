@@ -167,6 +167,20 @@
       }
 
       startMicDetection();
+      const startButton = document.createElement("button");
+      startButton.textContent = "Click here before blowing candles";
+      startButton.style.marginTop = "20px";
+      startButton.style.padding = "10px 16px";
+      startButton.style.borderRadius = "10px";
+      startButton.style.border = "none";
+      startButton.style.cursor = "pointer";
+
+      document.querySelector(".container").appendChild(startButton);
+
+      startButton.addEventListener("click", () => {
+        startMicDetection();
+        startButton.textContent = "Now blow the candles!";
+});
     </script>
   </body>
 </html>
