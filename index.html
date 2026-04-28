@@ -90,7 +90,88 @@
       }
 
       createCandles(candleCount);
+    function showLetterPage() {
+  document.body.innerHTML = `
+    <div style="
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff3f3;
+      padding: 30px;
+      font-family: 'Pixelify Sans', sans-serif;
+    ">
+      <div style="
+        max-width: 650px;
+        background: white;
+        padding: 35px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        line-height: 1.6;
+        color: #333;
+      ">
+        <h1 style="text-align: center;">Dear ${name},</h1>
 
+        <p>
+          Happy birthday!! I hope today brings you lots of happiness, warmth,
+          and beautiful memories.
+        </p>
+
+        <p>
+          I’m really grateful to know you, and I hope this little birthday cake
+          page can make you smile.
+        </p>
+
+        <p>
+          Wishing you love, luck, joy, and everything good in the new year of your life.
+        </p>
+
+        <p style="text-align: right; margin-top: 30px;">
+          With love,<br>
+          Your friend 💗
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+function blowOutCandles() {
+  const candles = document.querySelectorAll(".candle");
+
+  candles.forEach((candle) => {
+    const delay = Math.random() * 1000;
+
+    setTimeout(() => {
+      candle.classList.add("blown");
+    }, delay);
+  });
+
+  setTimeout(() => {
+    const subTitle = document.getElementById("subTitle");
+    subTitle.textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
+  }, 1200);
+
+  // Change to letter page after 5 seconds
+  setTimeout(showLetterPage, 5000);
+}
+
+// Simple button version
+const blowButton = document.createElement("button");
+blowButton.textContent = "Click to blow out candles";
+blowButton.style.marginTop = "20px";
+blowButton.style.padding = "12px 18px";
+blowButton.style.borderRadius = "12px";
+blowButton.style.border = "none";
+blowButton.style.cursor = "pointer";
+blowButton.style.fontFamily = "'Pixelify Sans', sans-serif";
+
+document.querySelector(".container").appendChild(blowButton);
+
+document.getElementById("subTitle").textContent =
+  "Make a wish, then click the button!";
+
+blowButton.addEventListener("click", blowOutCandles);
+      
       // === Microphone / Blow Detection ===
       async function startMicDetection() {
         try {
