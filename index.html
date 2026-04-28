@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Birthday Cake 🎂</title>
     <link rel="stylesheet" href="style.css" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
       rel="stylesheet"
     />
+
     <style>
       #mainTitle {
         font-size: 32px;
@@ -23,27 +25,55 @@
         font-family: 'Pixelify Sans', sans-serif;
         color: #555;
       }
+
+      #blowButton {
+        margin-top: 20px;
+        padding: 12px 18px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-family: 'Pixelify Sans', sans-serif;
+        font-size: 16px;
+        background: #ffb6c1;
+        color: white;
+      }
+
+      #blowButton:hover {
+        background: #ff9aaa;
+      }
+
+      .candle.blown::before,
+      .candle.blown::after {
+        display: none !important;
+        opacity: 0 !important;
+      }
     </style>
   </head>
+
   <body>
     <div class="container">
       <div id="birthdayText"></div>
+
       <div class="cake-container">
         <div class="cake" id="cake"></div>
       </div>
+
+      <button id="blowButton">Click to blow out candles</button>
     </div>
 
     <script>
       // Read URL params
       const params = new URLSearchParams(window.location.search);
       const name = params.get("name") || "Shuman Zheng";
+
       let candleCount = parseInt(params.get("candles")) || 20;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
 
       const birthdayText = document.getElementById("birthdayText");
+
       birthdayText.innerHTML = `
         <div id="mainTitle">Happy Birthday, ${name}!</div>
-        <div id="subTitle">Make a wish and blow candles.</div>
+        <div id="subTitle">Make a wish, then click the button!</div>
       `;
 
       const cake = document.getElementById("cake");
@@ -54,28 +84,33 @@
         "blue-candle",
         "yellow-candle",
       ];
+
       const CAKE_VISUAL_WIDTH = 35;
 
       function createCandles(count) {
         cake.innerHTML = "";
+
         const CANDLE_VISUAL_WIDTH = 2;
         const availableWidth = CAKE_VISUAL_WIDTH;
         const candlesPerRow = 6;
-        const rowCount = Math.ceil(count / candlesPerRow);
         const shiftAmount = 4;
 
         for (let i = 0; i < count; i++) {
           const candle = document.createElement("div");
+
           candle.classList.add("candle");
+
           const colorClass = colors[Math.floor(Math.random() * colors.length)];
           candle.classList.add(colorClass);
 
           const row = Math.floor(i / candlesPerRow);
           const col = i % candlesPerRow;
+
           const totalCandlesInRow = Math.min(
             candlesPerRow,
             count - row * candlesPerRow
           );
+
           const rowSpacing = availableWidth / (totalCandlesInRow + 1);
 
           const leftBase = rowSpacing * (col + 1) - CANDLE_VISUAL_WIDTH / 2 + 5;
@@ -90,70 +125,79 @@
       }
 
       createCandles(candleCount);
-function showLetterPage() {
-  document.body.innerHTML = `
-    <div style="
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff3f3;
-      padding: 30px;
-      font-family: 'Pixelify Sans', sans-serif;
-    ">
-      <div style="
-        max-width: 650px;
-        background: white;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        line-height: 1.6;
-        color: #333;
-      ">
-        <h1 style="text-align: center;">Dear ${name},</h1>
 
-        <p>
-          Happy birthday!! I hope today brings you lots of happiness, warmth,
-          and beautiful memories.
-        </p>
+      function showLetterPage() {
+        document.body.innerHTML = `
+          <div style="
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff3f3;
+            padding: 30px;
+            font-family: 'Pixelify Sans', sans-serif;
+          ">
+            <div style="
+              max-width: 650px;
+              background: white;
+              padding: 35px;
+              border-radius: 20px;
+              box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+              line-height: 1.6;
+              color: #333;
+            ">
+              <h1 style="text-align: center;">Dear ${name},</h1>
 
-        <p>
-          I’m really grateful to know you, and I hope this little birthday cake
-          page can make you smile.
-        </p>
+              <p>
+                Happy birthday!! I hope today brings you lots of happiness,
+                warmth, and beautiful memories.
+              </p>
 
-        <p>
-          Wishing you love, luck, joy, and everything good in the new year of your life.
-        </p>
+              <p>
+                I’m really grateful to know you, and I hope this little birthday
+                cake page can make you smile.
+              </p>
 
-        <p style="text-align: right; margin-top: 30px;">
-          With love,<br>
-          Your friend 💗
-        </p>
-      </div>
-    </div>
-  `;
-}
+              <p>
+                Wishing you love, luck, joy, and everything good in the new year
+                of your life.
+              </p>
 
-function blowOutCandles() {
-  const candles = document.querySelectorAll(".candle");
+              <p style="text-align: right; margin-top: 30px;">
+                With love,<br>
+                Your friend 💗
+              </p>
+            </div>
+          </div>
+        `;
+      }
 
-  candles.forEach((candle) => {
-    const delay = Math.random() * 1000;
+      function blowOutCandles() {
+        const candles = document.querySelectorAll(".candle");
+        const blowButton = document.getElementById("blowButton");
 
-    setTimeout(() => {
-      candle.classList.add("blown");
-    }, delay);
-  });
+        blowButton.disabled = true;
+        blowButton.textContent = "Candles blown out 🎉";
 
-  setTimeout(() => {
-    const subTitle = document.getElementById("subTitle");
-    subTitle.textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
-  }, 1200);
+        candles.forEach((candle) => {
+          const delay = Math.random() * 1000;
 
-  // Change to letter page after 5 seconds
-  setTimeout(showLetterPage, 5000);
-}
+          setTimeout(() => {
+            candle.classList.add("blown");
+          }, delay);
+        });
+
+        setTimeout(() => {
+          const subTitle = document.getElementById("subTitle");
+          subTitle.textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
+        }, 1200);
+
+        // Go to letter page after 5 seconds
+        setTimeout(showLetterPage, 5000);
+      }
+
+      const blowButton = document.getElementById("blowButton");
+      blowButton.addEventListener("click", blowOutCandles);
     </script>
   </body>
 </html>
