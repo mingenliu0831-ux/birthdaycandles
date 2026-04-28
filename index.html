@@ -38,8 +38,11 @@
         color: white;
       }
 
-      #blowButton:hover {
-        background: #ff9aaa;
+      #countdown {
+        margin-top: 20px;
+        font-size: 48px;
+        font-family: 'Pixelify Sans', sans-serif;
+        color: #ff7f9c;
       }
 
       .candle.blown::before,
@@ -59,12 +62,13 @@
       </div>
 
       <button id="blowButton">Click to blow out candles</button>
+
+      <div id="countdown"></div>
     </div>
 
     <script>
-      // Read URL params
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "郑舒蔓";
+      const name = params.get("name") || "Shuman Zheng";
 
       let candleCount = parseInt(params.get("candles")) || 20;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
@@ -97,7 +101,6 @@
 
         for (let i = 0; i < count; i++) {
           const candle = document.createElement("div");
-
           candle.classList.add("candle");
 
           const colorClass = colors[Math.floor(Math.random() * colors.length)];
@@ -172,12 +175,29 @@
         `;
       }
 
+      function startCountdown() {
+        const countdown = document.getElementById("countdown");
+        let number = 5;
+
+        countdown.textContent = number;
+
+        const timer = setInterval(() => {
+          number--;
+
+          if (number > 0) {
+            countdown.textContent = number;
+          } else {
+            clearInterval(timer);
+            showLetterPage();
+          }
+        }, 1000);
+      }
+
       function blowOutCandles() {
         const candles = document.querySelectorAll(".candle");
         const blowButton = document.getElementById("blowButton");
 
-        blowButton.disabled = true;
-        blowButton.textContent = "太棒了蔓蔓还会吹蜡烛🎉";
+        blowButton.style.display = "none";
 
         candles.forEach((candle) => {
           const delay = Math.random() * 1000;
@@ -189,11 +209,9 @@
 
         setTimeout(() => {
           const subTitle = document.getElementById("subTitle");
-          subTitle.textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
+          subTitle.textContent = "Get ready for your letter 💗";
+          startCountdown();
         }, 1200);
-
-        // Go to letter page after 5 seconds
-        setTimeout(showLetterPage, 5000);
       }
 
       const blowButton = document.getElementById("blowButton");
