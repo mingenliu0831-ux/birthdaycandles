@@ -166,7 +166,73 @@
         }, 1200);
       }
 
-      startMicDetection();
+      // === Microphone / Blow Detection ===
+const startButton = document.createElement("button");
+startButton.textContent = "Click here, then blow candles";
+startButton.style.marginTop = "20px";
+startButton.style.padding = "10px 16px";
+startButton.style.borderRadius = "10px";
+startButton.style.border = "none";
+startButton.style.cursor = "pointer";
+startButton.style.fontFamily = "'Pixelify Sans', sans-serif";
+
+document.querySelector(".container").appendChild(startButton);
+
+async function startMicDetection() {
+  try {
+    startButton.disabled = true;
+    startButton.textContent = "Listening... now blow!";
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: true,
+    });
+
+    const audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
+
+    await audioContext.resume();
+
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 1024;
+
+    source.connect(analyser);
+
+    const dataArray = new Uint8Array(analyser.fftSize);
+    let blown = false;
+
+    function detectBlow() {
+      analyser.getByteTimeDomainData(dataArray);
+
+      let sum = 0;
+
+      for (let i = 0; i < dataArray.length; i++) {
+        const value = dataArray[i] - 128;
+        sum += value * value;
+      }
+
+      const volume = Math.sqrt(sum / dataArray.length);
+
+      if (volume > 18 && !blown) {
+        blown = true;
+        blowOutCandles();
+        startButton.textContent = "Candles blown out 🎉";
+        return;
+      }
+
+      requestAnimationFrame(detectBlow);
+    }
+
+    detectBlow();
+  } catch (err) {
+    console.error("Mic access error:", err);
+    startButton.disabled = false;
+    startButton.textContent = "Mic blocked. Click again and allow microphone.";
+  }
+}
+
+startButton.addEventListener("click", startMicDetection);
+      
     </script>
   </body>
 </html>
