@@ -166,73 +166,40 @@
         }, 1200);
       }
 
-      // === Microphone / Blow Detection ===
-const startButton = document.createElement("button");
-startButton.textContent = "Click here, then blow candles";
-startButton.style.marginTop = "20px";
-startButton.style.padding = "10px 16px";
-startButton.style.borderRadius = "10px";
-startButton.style.border = "none";
-startButton.style.cursor = "pointer";
-startButton.style.fontFamily = "'Pixelify Sans', sans-serif";
+      createCandles(candleCount);
 
-document.querySelector(".container").appendChild(startButton);
+      function blowOutCandles() {
+        const candles = document.querySelectorAll(".candle");
 
-async function startMicDetection() {
-  try {
-    startButton.disabled = true;
-    startButton.textContent = "Listening... now blow!";
+        candles.forEach((candle) => {
+          const delay = Math.random() * 1000;
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-    });
+          setTimeout(() => {
+            candle.classList.add("blown");
+          }, delay);
+        });
 
-    const audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
-
-    await audioContext.resume();
-
-    const source = audioContext.createMediaStreamSource(stream);
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 1024;
-
-    source.connect(analyser);
-
-    const dataArray = new Uint8Array(analyser.fftSize);
-    let blown = false;
-
-    function detectBlow() {
-      analyser.getByteTimeDomainData(dataArray);
-
-      let sum = 0;
-
-      for (let i = 0; i < dataArray.length; i++) {
-        const value = dataArray[i] - 128;
-        sum += value * value;
+        setTimeout(() => {
+          const subTitle = document.getElementById("subTitle");
+          subTitle.textContent = "Yayy! Wishing you the happiest birthday ever!! 🎉";
+        }, 1200);
       }
 
-      const volume = Math.sqrt(sum / dataArray.length);
+      const blowButton = document.createElement("button");
+      blowButton.textContent = "Click to blow out candles";
+      blowButton.style.marginTop = "20px";
+      blowButton.style.padding = "12px 18px";
+      blowButton.style.borderRadius = "12px";
+      blowButton.style.border = "none";
+      blowButton.style.cursor = "pointer";
+      blowButton.style.fontFamily = "'Pixelify Sans', sans-serif";
 
-      if (volume > 18 && !blown) {
-        blown = true;
-        blowOutCandles();
-        startButton.textContent = "Candles blown out 🎉";
-        return;
-      }
+      document.querySelector(".container").appendChild(blowButton);
 
-      requestAnimationFrame(detectBlow);
-    }
+      document.getElementById("subTitle").textContent =
+        "Make a wish, then click the button!";
 
-    detectBlow();
-  } catch (err) {
-    console.error("Mic access error:", err);
-    startButton.disabled = false;
-    startButton.textContent = "Mic blocked. Click again and allow microphone.";
-  }
-}
-
-startButton.addEventListener("click", startMicDetection);
-      
+      blowButton.addEventListener("click", blowOutCandles);
     </script>
   </body>
 </html>
