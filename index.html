@@ -64,7 +64,7 @@
     <script>
       // Read URL params
       const params = new URLSearchParams(window.location.search);
-      const name = params.get("name") || "Shuman Zheng";
+      const name = params.get("name") || "郑舒蔓";
 
       let candleCount = parseInt(params.get("candles")) || 20;
       candleCount = Math.min(Math.max(candleCount, 1), 30);
@@ -177,7 +177,7 @@
         const blowButton = document.getElementById("blowButton");
 
         blowButton.disabled = true;
-        blowButton.textContent = "Candles blown out 🎉";
+        blowButton.textContent = "太棒了蔓蔓还会吹蜡烛🎉";
 
         candles.forEach((candle) => {
           const delay = Math.random() * 1000;
